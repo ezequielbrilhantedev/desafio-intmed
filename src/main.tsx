@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         element: <HomeRoute />,
       },
       {
-        path: 'nova-consulta',
+        path: 'home/nova-consulta',
         element: <NewQuery />,
       },
     ],
