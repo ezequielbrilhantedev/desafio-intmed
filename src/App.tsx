@@ -3,12 +3,15 @@
 // import viteLogo from '/vite.svg'
 import './App.css';
 import { Outlet } from 'react-router-dom';
+import { UserContextProvider } from './context/index';
 
 function App() {
   return (
-    <div className="container">
-      <Outlet />
-    </div>
+    <UserContextProvider>
+      <div id="App" className="container">
+        <Outlet />
+      </div>
+    </UserContextProvider>
   );
 }
 

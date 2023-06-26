@@ -6,10 +6,10 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from 'react-router-dom';
-import NewQuery from './routes/NewQuery';
 import LoginRoute from './routes/Login.tsx';
 import Create from './routes/Create.tsx';
 import HomeRoute from './routes/HomeRoute.tsx';
+import NewQueryRoute from './routes/NewQuery';
 
 const router = createBrowserRouter([
   {
@@ -30,7 +30,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'home/nova-consulta',
-        element: <NewQuery />,
+        element: <NewQueryRoute />,
       },
     ],
   },

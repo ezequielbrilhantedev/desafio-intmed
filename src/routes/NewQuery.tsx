@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { NewQuery } from '../components/NewQuery/NewQuery';
 
-const NewQuery = () => {
+const NewQueryRoute = () => {
   return (
-    <div>NewQuery</div>
-  )
-}
+    <div>
+      <NewQuery />
+    </div>
+  );
+};
 
-export default NewQuery
+export default NewQueryRoute;

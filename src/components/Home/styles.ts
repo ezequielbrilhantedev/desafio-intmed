@@ -30,17 +30,19 @@ export const UserName = styled.h1`
   cursor: pointer;
   `;
 
-export const Login = styled.h1`
+export const Desconectar = styled.button`
   font-size: 13px;
   font-family: 'Roboto';
   font-weight: 400;
   color: #49b4bb;
+  background: #ffffff ;
+  border: none;
   cursor: pointer;
 `;
 
 export const DivBody = styled.div`
   margin-top: 17px;
-  height: 92vh;
+  height: 90vh;
   box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 `;

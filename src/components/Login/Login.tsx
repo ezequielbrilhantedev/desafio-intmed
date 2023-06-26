@@ -1,24 +1,90 @@
 import * as S from './styles';
 import Logo from '../../assets/icons/logo.svg';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import APILogin from '../../services/login.service';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useUserData } from '../../context';
+import { useEffect, useState } from 'react';
 
 const Login = () => {
-  const handleLogin = () => {
-    axios
-      .post('/users/login', {
-        username: 'intmed',
-        password: 'challenge',
-      })
-      .then((response) => {
-        console.log('response data', response);
-      });
+  const {
+    password,
+    setPassword,
+    username,
+    setUsername,
+    setToken,
+  } = useUserData();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
-  useEffect(() => {}, []);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    const storedPassword = localStorage.getItem('password');
+    const storedRememberMe =
+      localStorage.getItem('rememberMe');
+
+    if (storedUsername && storedRememberMe === 'true') {
+      setUsername(storedUsername);
+      setRememberMe(true);
+    }
+
+    if (storedPassword && storedRememberMe === 'true') {
+      setPassword(storedPassword);
+      setRememberMe(true);
+    }
+  });
+
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/users/login',
+        {
+          username: username,
+          password: password,
+        }
+      );
+      console.log('login', response.data);
+      setToken(response.data);
+
+      if (response.status === 200) {
+        if (rememberMe) {
+          localStorage.setItem('username', username);
+          localStorage.setItem('password', password);
+          localStorage.setItem('rememberMe', 'true');
+        } else {
+          localStorage.removeItem('username');
+          localStorage.removeItem('password');
+          localStorage.removeItem('rememberMe');
+        }
+
+        navigate('/home');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const hendleUserNameChange = (event: any) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event: any) => {
+    setPassword(event.target.value);
+  };
+
+  const handleRememberMeChange = (event: any) => {
+    setRememberMe(event.target.checked);
+  };
 
   return (
     <S.Container>
@@ -32,20 +98,32 @@ const Login = () => {
               placeholder="Email ou Login"
               id="inputEmail"
               type="text"
+              value={username}
+              onChange={hendleUserNameChange}
             />
           </S.InputEmail>
           <S.InputPassword>
             <input
               placeholder="Senha"
               id="inputPassword"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={handlePasswordChange}
             />
-            <span>
-              <VisibilityIcon />
+            <span onClick={togglePasswordVisibility}>
+              {!showPassword ? (
+                <VisibilityIcon />
+              ) : (
+                <VisibilityOffIcon />
+              )}
             </span>
           </S.InputPassword>
           <S.DivCheckBox>
-            <S.Checkbox type="checkbox" />
+            <S.Checkbox
+              type="checkbox"
+              checked={rememberMe}
+              onChange={handleRememberMeChange}
+            />
             <S.RememberPassword>
               Lembrar minha senha
             </S.RememberPassword>
@@ -60,9 +138,7 @@ const Login = () => {
               </Link>
             </S.ButtonCreateCount>
             <S.ButtonAccess onClick={handleLogin}>
-              <Link className="accessCount" to="/home">
-                Acessar
-              </Link>
+              Acessar
             </S.ButtonAccess>
           </S.DivButtons>
         </S.Form>
